@@ -1,0 +1,36 @@
+with area as
+(
+	select city_id, (height * width) as "area" from banners
+),
+with minarea as 
+(
+	select city_id, min(area) as "min_area" from area group by city_id
+),
+with avgarea as
+(
+	select city_id, avg(area) as "avg_area" from area group by city_id
+),
+with maxarea as
+(
+	select city_id, max(area) as "max_area" from area group by city_id
+),
+with totalarea as
+(
+	select city_id, sum(area) as "total_area" from area group by city_id
+),
+with countbanners as
+(
+	select city_id, count(area) as "banners" from area group by city_id
+)
+select cities.name, countbanners.banners, minarea.min_area, avgarea.avg_area, maxarea.max_area, totalarea.total_area, countbanners.banners from cities
+join countbanners
+on cities.city_id = countbanners.city_id
+join minarea
+on countbannrs.city_id = minarea.city_id
+join avgarea
+on minarea.city_id = avgarea.city_id
+join maxarea
+on avgarea.city_id = maxarea.city_id
+join totalarea
+on maxarea.city_id = totalarea.city_id
+order by cities.name asc;
